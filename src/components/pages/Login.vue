@@ -17,19 +17,25 @@
     </h1>
 
     <!-- Conteúdo centralizado -->
-    <div class="relative z-10 flex flex-col items-center justify-center h-full px-4">
+    <div
+      class="relative z-10 flex flex-col items-center justify-center h-full px-4"
+    >
       <!-- Caixa de login -->
-      <div class="bg-black/80 p-8 rounded-lg w-full max-w-sm text-white shadow-lg">
+      <div
+        class="bg-black/80 p-8 rounded-lg w-full max-w-sm text-white shadow-lg"
+      >
         <h2 class="text-2xl font-semibold mb-6">Entrar</h2>
 
         <!-- Formulário de login -->
-        <form class="flex flex-col space-y-4">
+        <form @submit.prevent="loginUser" class="flex flex-col space-y-4">
           <input
+            v-model="document"
             type="text"
             placeholder="Email ou CPF"
             class="p-3 bg-neutral-800 text-white rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E50914]"
           />
           <input
+            v-model="password"
             type="password"
             placeholder="Senha"
             class="p-3 bg-neutral-800 text-white rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E50914]"
@@ -43,7 +49,9 @@
         </form>
 
         <!-- Opções extras -->
-        <div class="flex justify-between items-center text-sm text-gray-400 mt-4">
+        <div
+          class="flex justify-between items-center text-sm text-gray-400 mt-4"
+        >
           <label class="flex items-center gap-2">
             <input type="checkbox" class="accent-[#E50914]" />
             <span>Lembre-se de mim</span>
@@ -59,7 +67,8 @@
 
         <!-- Proteção -->
         <p class="text-xs text-gray-500 mt-2">
-          Esta página é protegida por reCAPTCHA para garantir que você não é um robô.
+          Esta página é protegida por reCAPTCHA para garantir que você não é um
+          robô.
         </p>
       </div>
     </div>
@@ -67,4 +76,21 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
+
+const document = ref("");
+const password = ref("");
+const router = useRouter();
+const userStore = useUserStore();
+
+function loginUser() {
+  const success = userStore.login(document.value, password.value);
+  if (success) {
+    router.push("/users"); // redireciona para página de usuários
+  } else {
+    alert("Documento ou senha inválidos!");
+  }
+}
 </script>
