@@ -12,7 +12,7 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', component: Dashboard},
   { path: '/users', name: 'Users', component: Users },
   { path: '/clients', name: 'Clients', component: Clients },
-  { path: '/movies', name: 'Movies', component: Movies },
+  { path: '/movies', name: 'Movies', component: Movies, meta: { requiresAuth: true } },
   { path: '/rentals', name: 'Rentals', component: Rentals },
 ];
 
