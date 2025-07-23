@@ -14,8 +14,13 @@ export const useUserStore = defineStore('user', {
     currentUser: null as User | null,
   }),
 
+  getters: {
+    // Indica se o usuário está logado
+    isLoggedIn: (state) => !!state.currentUser,
+  },
+
   actions: {
-    // Carrega os usuários do localStorage ao iniciar
+    // Carrega os usuários do localStorage
     loadUsersFromStorage() {
       const data = localStorage.getItem('users');
       if (data) {
@@ -23,61 +28,57 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    // Salva usuários no localStorage
+    // Salva os usuários no localStorage
     saveUsersToStorage() {
       localStorage.setItem('users', JSON.stringify(this.users));
     },
 
-    // Registra um novo usuário
-    // Retorna false se já existir usuário com o mesmo documento
+    // Registra novo usuário (retorna false se já existir documento)
     registerUser(user: User): boolean {
       const exists = this.users.some(u => u.document === user.document);
       if (exists) {
-        return false; // documento duplicado, falha no cadastro
+        return false;
       }
       this.users.push(user);
       this.saveUsersToStorage();
       return true;
     },
 
+    // Edita usuário
     editUser(updatedUser: User): boolean {
-      const index = this.users.findIndex((u) => u.id === updatedUser.id);
+      const index = this.users.findIndex(u => u.id === updatedUser.id);
       if (index !== -1) {
-        // Se a senha estiver vazia, mantenha a senha anterior
         if (!updatedUser.password) {
           updatedUser.password = this.users[index].password;
         }
         this.users[index] = { ...updatedUser };
         this.saveUsersToStorage();
-    
-        // Atualiza o usuário logado se for o mesmo
+
         if (this.currentUser?.id === updatedUser.id) {
           this.currentUser = { ...updatedUser };
-          localStorage.setItem("loggedUser", JSON.stringify(this.currentUser));
+          localStorage.setItem('loggedUser', JSON.stringify(this.currentUser));
         }
-    
+
         return true;
       }
       return false;
     },
-    
 
-    // Desativa usuário (soft delete)
+    // Soft delete (desativar usuário)
     deactivateUser(id: string): boolean {
       const user = this.users.find(u => u.id === id);
       if (user) {
         user.status = 'inactive';
         this.saveUsersToStorage();
-        // Se desativou o usuário logado, desloga
         if (this.currentUser?.id === id) {
           this.logout();
         }
         return true;
       }
-      return false; // usuário não encontrado
+      return false;
     },
 
-    // Filtra usuários para listagem por nome e status
+    // Filtro de listagem
     filterUsers(
       name: string = '',
       status: 'active' | 'inactive' | 'all' = 'all'
@@ -89,7 +90,7 @@ export const useUserStore = defineStore('user', {
       });
     },
 
-    // Faz login: retorna true se sucesso, false se falha
+    // Login
     login(document: string, password: string): boolean {
       const user = this.users.find(
         u => u.document === document && u.password === password
@@ -102,13 +103,13 @@ export const useUserStore = defineStore('user', {
       return false;
     },
 
-    // Logout, limpa currentUser e localStorage
+    // Logout
     logout() {
       this.currentUser = null;
       localStorage.removeItem('loggedUser');
     },
 
-    // Carrega usuário logado do localStorage ao iniciar
+    // Carrega usuário logado
     loadLoggedUser() {
       const data = localStorage.getItem('loggedUser');
       if (data) {

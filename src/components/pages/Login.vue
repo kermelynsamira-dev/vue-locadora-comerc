@@ -88,8 +88,8 @@ const userStore = useUserStore();
 function loginUser() {
   const success = userStore.login(document.value, password.value);
   if (success) {
-    router.push("/users"); // redireciona para página de usuários
-  } else {
+  router.push("/dashboard"); // para ir pra dashboard em vez de /users direto
+} else {
     alert("Documento ou senha inválidos!");
   }
 }
