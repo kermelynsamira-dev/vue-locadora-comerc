@@ -1,42 +1,65 @@
 <template>
-  <div class="p-6">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">Locações</h1>
-      <button @click="openForm" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Nova Locação
-      </button>
+  <div class="min-h-screen flex items-center justify-center text-white font-montserrat px-4">
+    <div class="w-full max-w-5xl bg-black/70 backdrop-blur-lg rounded-xl shadow-lg p-8 border border-red-700">
+      <h1 class="text-4xl font-extrabold mb-6 tracking-wide text-red-500 text-center">Gestão de Locações</h1>
+
+      <RentalList
+        @edit-rental="openModalForEditRental"
+        @new-rental="openModalForNewRental"
+      />
+
+      <RentalForm
+        v-if="showModal"
+        :rentalToEdit="form"
+        :isEditing="isEditing"
+        @close="showModal = false"
+        @saved="showModal = false"
+      />
     </div>
-
-    <RentalForm
-      v-if="showForm"
-      @close="closeForm"
-      @saved="onSavedRental"
-    />
-
-    <RentalList />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRentalStore } from '@/stores/rental';
+import { useRentalStore, type Rental } from '@/stores/rental';
 import { useClientStore } from '@/stores/client';
-import RentalForm from '@/components/rentals/RentalForm.vue';
 import RentalList from '@/components/rentals/RentalList.vue';
+import RentalForm from '@/components/rentals/RentalForm.vue';
 
 const rentalStore = useRentalStore();
 const clientStore = useClientStore();
 
-const showForm = ref(false);
+const showModal = ref(false);
+const isEditing = ref(false);
 
-function openForm() {
-  showForm.value = true;
+const form = ref<Rental>({
+  id: '',
+  clientId: '',
+  movieTitles: [],
+  userId: '',
+  rentalDate: '',
+  returnDate: '',
+  status: 'alugado',
+});
+
+function openModalForEditRental(rental: Rental) {
+  form.value = { ...rental };
+  isEditing.value = true;
+  showModal.value = true;
 }
-function closeForm() {
-  showForm.value = false;
-}
-function onSavedRental() {
-  // Nada necessário aqui por enquanto, o store já atualiza.
+
+function openModalForNewRental() {
+  form.value = {
+    id: '',
+    clientId: '',
+    movieTitles: [],
+    userId: '',
+    rentalDate: '',
+    returnDate: '',
+    status: 'alugado',
+  };
+  isEditing.value = false;
+  showModal.value = true;
 }
 
 onMounted(() => {

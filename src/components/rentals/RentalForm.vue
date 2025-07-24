@@ -1,13 +1,15 @@
 <template>
-  <div class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg p-6 max-w-2xl w-full shadow-lg overflow-auto max-h-[90vh]">
-      <h2 class="text-xl font-semibold mb-4">Nova Locação</h2>
+  <div class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 px-4">
+    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-2xl shadow-lg text-white overflow-auto max-h-[90vh]">
+      <h2 class="text-2xl font-extrabold mb-6 text-red-600">
+        Nova Locação
+      </h2>
 
       <form @submit.prevent="saveRental" class="space-y-4">
         <!-- Cliente -->
         <div>
-          <label class="block mb-1 font-medium">Cliente</label>
-          <select v-model="form.clientId" required class="w-full border p-2 rounded">
+          <label class="block mb-1 font-semibold">Cliente</label>
+          <select v-model="form.clientId" required class="w-full p-3 rounded bg-gray-700 border border-gray-600">
             <option value="" disabled>Selecione o cliente</option>
             <option v-for="client in activeClients" :key="client.id" :value="client.id">
               {{ client.firstName }} {{ client.lastName }} - {{ client.cpf }}
@@ -17,8 +19,8 @@
 
         <!-- Filmes -->
         <div>
-          <label class="block mb-1 font-medium">Filmes</label>
-          <select v-model="form.movieIds" multiple required class="w-full border p-2 rounded">
+          <label class="block mb-1 font-semibold">Filmes</label>
+          <select v-model="form.movieIds" multiple required class="w-full p-3 rounded bg-gray-700 border border-gray-600">
             <option v-for="movie in movies" :key="movie.imdbID" :value="movie.imdbID">
               {{ movie.Title }} ({{ movie.Year }})
             </option>
@@ -28,25 +30,34 @@
         <!-- Datas -->
         <div class="flex gap-4">
           <div class="flex-1">
-            <label class="block mb-1 font-medium">Data de locação</label>
-            <input type="date" v-model="form.rentalDate" required class="w-full border p-2 rounded" />
+            <label class="block mb-1 font-semibold">Data de locação</label>
+            <input type="date" v-model="form.rentalDate" required class="w-full p-3 rounded bg-gray-700 border border-gray-600" />
           </div>
           <div class="flex-1">
-            <label class="block mb-1 font-medium">Data de entrega</label>
-            <input type="date" v-model="form.returnDate" required class="w-full border p-2 rounded" />
+            <label class="block mb-1 font-semibold">Data de entrega</label>
+            <input type="date" v-model="form.returnDate" required class="w-full p-3 rounded bg-gray-700 border border-gray-600" />
           </div>
         </div>
 
         <!-- Feedback -->
-        <div v-if="feedbackMessage" :class="feedbackClass">
+        <div v-if="feedbackMessage" :class="feedbackClass" class="mt-2 text-sm text-center">
           {{ feedbackMessage }}
         </div>
 
         <!-- Botões -->
-        <div class="flex justify-end gap-4 mt-6">
-          <button type="button" @click="$emit('close')" class="px-4 py-2 border rounded">Cancelar</button>
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Salvar Locação
+        <div class="flex justify-end gap-4 pt-4">
+          <button
+            type="button"
+            @click="$emit('close')"
+            class="px-4 py-2 border border-gray-500 text-white rounded hover:bg-gray-700 transition"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition"
+          >
+            Salvar
           </button>
         </div>
       </form>
@@ -109,7 +120,10 @@ function saveRental() {
   feedbackMessage.value = 'Locação salva com sucesso!';
   feedbackClass.value = 'text-green-600';
 
-  emit('saved');
-  emit('close');
+  setTimeout(() => {
+    feedbackMessage.value = '';
+    emit('saved');
+    emit('close');
+  }, 1500);
 }
 </script>
