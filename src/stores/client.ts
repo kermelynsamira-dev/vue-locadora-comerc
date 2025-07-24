@@ -9,26 +9,27 @@ export interface Address {
 }
 
 export interface Client {
-    id: string;
-    firstName: string;
-    lastName: string;
-    cpf: string;
-    email: string;
-    phone: string;
-    address: {
-      cep: string;
-      street: string;
-      neighborhood: string;
-      city: string;
-      uf: string;
-    };
-    status: 'active' | 'inactive';
-  }  
+  id: string;
+  firstName: string;
+  lastName: string;
+  cpf: string;
+  email: string;
+  phone: string;
+  address: {
+    cep: string;
+    street: string;
+    neighborhood: string;
+    city: string;
+    uf: string;
+  };
+  status: 'active' | 'inactive';
+}
 
 export const useClientStore = defineStore('client', {
   state: () => ({
     clients: [] as Client[],
   }),
+
   getters: {
     filteredClients: (state) => (search: string, filterStatus: string) => {
       let filtered = state.clients;
@@ -49,30 +50,43 @@ export const useClientStore = defineStore('client', {
       return filtered;
     }
   },
+
   actions: {
-    loadClients() {
+    // Renomeado para manter padrão
+    loadFromStorage() {
       const data = localStorage.getItem('clients');
       if (data) this.clients = JSON.parse(data);
     },
-    saveClients() {
+
+    saveToStorage() {
       localStorage.setItem('clients', JSON.stringify(this.clients));
     },
+
     addClient(client: Client) {
       this.clients.push(client);
-      this.saveClients();
+      this.saveToStorage();
     },
+
     updateClient(updatedClient: Client) {
       const index = this.clients.findIndex(c => c.id === updatedClient.id);
       if (index !== -1) {
         this.clients[index] = updatedClient;
-        this.saveClients();
+        this.saveToStorage();
       }
     },
+
+    loadClients() {
+      const data = localStorage.getItem('clients');
+      if (data) {
+        this.clients = JSON.parse(data);
+      }
+    },
+
     softDeleteClient(id: string) {
       const client = this.clients.find(c => c.id === id);
       if (client) {
         client.status = 'inactive';
-        this.saveClients();
+        this.saveToStorage();
       }
     }
   }

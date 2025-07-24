@@ -66,9 +66,9 @@
   const clientStore = useClientStore();
   
   onMounted(() => {
-    clientStore.loadClients();
-  });
-  
+  clientStore.loadFromStorage();
+});
+
   const filteredClients = computed(() => {
     return clientStore.filteredClients(search.value, filterStatus.value);
   });
