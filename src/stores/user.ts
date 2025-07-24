@@ -91,7 +91,7 @@ export const useUserStore = defineStore('user', {
     },
 
     // Login
-    login(document: string, password: string): boolean {
+    loginUser(document: string, password: string): boolean {
       const user = this.users.find(
         u => u.document === document && u.password === password
       );

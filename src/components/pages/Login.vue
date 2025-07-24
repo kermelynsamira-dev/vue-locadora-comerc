@@ -2,16 +2,13 @@
   <!-- Tela inteira com imagem de fundo e overlay escuro -->
   <div
     class="relative w-screen h-screen bg-cover bg-center bg-no-repeat"
-    style="
-      background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/a927b1ee-784d-494a-aa80-cf7a062d2523/web/BR-pt-20250714-TRIFECTA-perspective_d87ab9a5-4b7b-44d6-8466-5c5dab8e8212_large.jpg');
-    "
   >
     <!-- Overlay preto translúcido -->
     <div class="absolute inset-0 bg-black/60"></div>
 
     <!-- LOGO FIXO NO TOPO ESQUERDO -->
     <h1
-      class="absolute top-6 left-6 text-5xl font-bold text-[#E50914] tracking-wide z-20"
+      class="absolute top-6 left-6 text-3xl font-bold text-[#E50914] tracking-wide z-20"
     >
       CineComerc
     </h1>
@@ -47,29 +44,6 @@
             Entrar
           </button>
         </form>
-
-        <!-- Opções extras -->
-        <div
-          class="flex justify-between items-center text-sm text-gray-400 mt-4"
-        >
-          <label class="flex items-center gap-2">
-            <input type="checkbox" class="accent-[#E50914]" />
-            <span>Lembre-se de mim</span>
-          </label>
-          <a href="#" class="hover:underline">Precisa de ajuda?</a>
-        </div>
-
-        <!-- Cadastro novo -->
-        <div class="text-sm text-gray-400 mt-6">
-          Novo por aqui?
-          <a href="#" class="text-white hover:underline">Cadastre-se agora</a>.
-        </div>
-
-        <!-- Proteção -->
-        <p class="text-xs text-gray-500 mt-2">
-          Esta página é protegida por reCAPTCHA para garantir que você não é um
-          robô.
-        </p>
       </div>
     </div>
   </div>
@@ -86,9 +60,9 @@ const router = useRouter();
 const userStore = useUserStore();
 
 function loginUser() {
-  const success = userStore.login(document.value, password.value);
+  const success = userStore.loginUser(document.value.trim(), password.value.trim());
   if (success) {
-  router.push("/dashboard"); // para ir pra dashboard em vez de /users direto
+  router.push("/dashboard");
 } else {
     alert("Documento ou senha inválidos!");
   }
