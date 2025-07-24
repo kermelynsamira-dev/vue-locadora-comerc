@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Movie } from '@/types/movie';
 
-const API_KEY = 'your_api_key'; // substitua pela sua chave OMDb
+const API_KEY = '2b62248'; 
 
 export const useMovieStore = defineStore('movie', {
   state: () => ({
