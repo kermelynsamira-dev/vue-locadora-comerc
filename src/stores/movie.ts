@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import type { Movie } from '@/types/movie';
 
-const API_KEY = '2b62248'; 
+const API_KEY = '2b62248';
+const STORAGE_KEY = 'cinecomerc_movies';
 
 export const useMovieStore = defineStore('movie', {
   state: () => ({
@@ -11,6 +12,17 @@ export const useMovieStore = defineStore('movie', {
   }),
 
   actions: {
+    loadFromStorage() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        this.movies = JSON.parse(stored);
+      }
+    },
+
+    saveToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.movies));
+    },
+
     async searchMovies(title: string, year?: string) {
       this.loading = true;
       this.error = '';
@@ -24,9 +36,11 @@ export const useMovieStore = defineStore('movie', {
 
         if (data.Response === 'True') {
           this.movies = data.Search;
+          this.saveToStorage();
         } else {
           this.movies = [];
           this.error = data.Error || 'Nenhum filme encontrado.';
+          this.saveToStorage();
         }
       } catch (err) {
         this.error = 'Erro ao buscar filmes.';

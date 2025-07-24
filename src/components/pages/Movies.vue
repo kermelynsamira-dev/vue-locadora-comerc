@@ -22,13 +22,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useMovieStore } from '@/stores/movie';
 
 const title = ref('');
 const year = ref('');
 
-const movieStore = useMovieStore(); // não desestrutura
+const movieStore = useMovieStore();
+
+onMounted(() => {
+  movieStore.loadFromStorage();
+});
 
 function search() {
   if (title.value.trim()) {
