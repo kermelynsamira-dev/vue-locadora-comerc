@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 px-4">
-    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-2xl shadow-lg text-white overflow-auto max-h-[90vh]">
+    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-2xl shadow-lg text-white overflow-auto max-h-[50vh]">
       <h2 class="text-2xl font-extrabold mb-6 text-red-600">
         Nova Locação
       </h2>

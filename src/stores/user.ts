@@ -4,7 +4,7 @@ export interface User {
   id: string;
   name: string;
   document: string;
-  password: string;
+  password?: string;
   status: 'active' | 'inactive';
 }
 

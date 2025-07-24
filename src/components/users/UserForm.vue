@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 px-4">
-    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg text-white overflow-auto max-h-[90vh]">
+    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg text-white overflow-auto max-h-[80vh]">
       <h2 class="text-2xl font-extrabold mb-6 text-red-600">
         {{ isEditing ? 'Editar Usuário' : 'Novo Usuário' }}
       </h2>
@@ -11,6 +11,7 @@
           type="text"
           placeholder="Nome"
           class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring focus:ring-red-500/40"
+          required
         />
 
         <input
@@ -18,6 +19,7 @@
           type="text"
           placeholder="Documento"
           class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring focus:ring-red-500/40"
+          required
         />
 
         <input
@@ -26,11 +28,13 @@
           type="password"
           placeholder="Senha"
           class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring focus:ring-red-500/40"
+          required
         />
 
         <select
           v-model="localUser.status"
           class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring focus:ring-red-500/40"
+          required
         >
           <option value="active">Ativo</option>
           <option value="inactive">Inativo</option>
@@ -40,7 +44,7 @@
           <button
             type="button"
             @click="$emit('close')"
-            lass="px-4 py-2 border border-gray-500 text-white rounded hover:bg-gray-700 transition"
+            class="px-4 py-2 border border-gray-500 text-white rounded hover:bg-gray-700 transition"
           >
             Cancelar
           </button>

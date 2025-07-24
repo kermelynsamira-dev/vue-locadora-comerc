@@ -144,6 +144,10 @@ function closeModal() {
 
 function submitForm(updated: User) {
   if (isEditing.value) {
+    // Se a senha estiver vazia, não sobrescreve a senha no store
+    if (!updated.password) {
+      delete updated.password;
+    }
     const success = userStore.editUser(updated);
     alertMessage.value = success ? 'Usuário atualizado!' : 'Erro ao atualizar.';
     alertType.value = success ? 'success' : 'error';

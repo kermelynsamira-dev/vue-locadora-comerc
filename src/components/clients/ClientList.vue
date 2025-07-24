@@ -35,11 +35,12 @@
         'p-3 rounded-md font-medium text-center text-white shadow transition',
         alertType === 'success' ? 'bg-green-600' : 'bg-red-600'
       ]"
+      role="alert"
     >
       {{ alertMessage }}
     </div>
 
-    <!-- Tabela -->
+    <!-- Tabela de clientes -->
     <div class="overflow-x-auto rounded-lg shadow">
       <table class="min-w-full text-sm text-left">
         <thead>
@@ -58,16 +59,19 @@
             :key="client.id"
             class="bg-white text-gray-800 border-b border-gray-200 hover:bg-red-100 transition"
           >
-            <td class="p-4 font-medium border-r border-gray-100">{{ client.firstName }} {{ client.lastName }}</td>
+            <td class="p-4 font-medium border-r border-gray-100">
+              {{ client.firstName }} {{ client.lastName }}
+            </td>
             <td class="p-4 border-r border-gray-100">{{ client.cpf }}</td>
             <td class="p-4 border-r border-gray-100">{{ client.email }}</td>
             <td class="p-4 border-r border-gray-100">{{ client.phone }}</td>
-            <td class="p-4 capitalize flex items-center gap-2 border-r border-gray-100">
-              <Check v-if="client.status === 'active'" class="text-green-600 w-4 h-4" />
-              <X v-else class="text-gray-500 w-4 h-4" />
-              <span :class="client.status === 'active' ? 'text-green-600' : 'text-gray-500'">
-                {{ client.status }}
-              </span>
+            <td
+              class="p-4 capitalize flex items-center gap-2 border-r border-gray-100"
+              :class="client.status === 'active' ? 'text-green-600' : 'text-gray-500'"
+            >
+              <Check v-if="client.status === 'active'" class="w-4 h-4" />
+              <X v-else class="w-4 h-4" />
+              <span>{{ client.status }}</span>
             </td>
             <td class="p-4 text-center">
               <button
@@ -88,7 +92,7 @@
             </td>
           </tr>
 
-          <!-- Vazio -->
+          <!-- Quando não há clientes -->
           <tr v-if="filteredClients.length === 0">
             <td colspan="6" class="text-center p-6 text-gray-500 italic">
               Nenhum cliente encontrado.
@@ -125,6 +129,7 @@ const alertType = ref<'success' | 'error'>('success');
 
 const showModal = ref(false);
 const isEditing = ref(false);
+
 const form = ref<Client>({
   id: '',
   firstName: '',
@@ -142,14 +147,17 @@ const form = ref<Client>({
   status: 'active',
 });
 
+// Carrega clientes do localStorage ao montar
 onMounted(() => {
   clientStore.loadFromStorage();
 });
 
+// Computed para filtrar clientes conforme busca e status
 const filteredClients = computed(() => {
   return clientStore.filteredClients(search.value, filterStatus.value);
 });
 
+// Abre modal para criar cliente novo (limpa form)
 function openModalForNewClient() {
   form.value = {
     id: '',
@@ -171,21 +179,34 @@ function openModalForNewClient() {
   showModal.value = true;
 }
 
+// Abre modal para editar cliente existente (copia dados)
 function openModalForEditClient(client: Client) {
   form.value = { ...client };
   isEditing.value = true;
   showModal.value = true;
 }
 
+// Marca cliente como desativado (soft delete)
 function softDeleteClient(id: string) {
   clientStore.softDeleteClient(id);
   alertMessage.value = 'Cliente desativado!';
   alertType.value = 'success';
+
+  // Limpa alerta após 3 segundos
+  setTimeout(() => {
+    alertMessage.value = '';
+  }, 3000);
 }
 
+// Após salvar cliente, fecha modal e mostra alerta
 function handleSaved() {
   showModal.value = false;
   alertMessage.value = 'Cliente salvo com sucesso!';
   alertType.value = 'success';
+
+  // Limpa alerta após 3 segundos
+  setTimeout(() => {
+    alertMessage.value = '';
+  }, 3000);
 }
 </script>

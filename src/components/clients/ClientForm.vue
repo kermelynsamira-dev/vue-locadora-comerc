@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 px-4">
-    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg text-white overflow-auto max-h-[90vh]">
+    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg text-white overflow-auto max-h-[80vh] overflow-y: auto;">
       <h2 class="text-2xl font-extrabold mb-6 text-red-600">
         {{ clientToEdit ? 'Editar Cliente' : 'Novo Cliente' }}
       </h2>
@@ -66,6 +66,7 @@
               class="flex-1 p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring focus:ring-red-500/40"
             />
           </div>
+
           <input
             v-model="form.address.street"
             type="text"
@@ -82,6 +83,7 @@
             required
             class="w-full mb-2 p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring focus:ring-red-500/40"
           />
+
           <div class="flex gap-2">
             <input
               v-model="form.address.city"
@@ -131,7 +133,12 @@
       </form>
 
       <!-- Feedback -->
-      <div v-if="feedbackMessage" :class="feedbackClass" class="mt-4 p-2 rounded text-center">
+      <div
+        v-if="feedbackMessage"
+        :class="feedbackClass"
+        class="mt-4 p-2 rounded text-center"
+        role="alert"
+      >
         {{ feedbackMessage }}
       </div>
     </div>
@@ -144,12 +151,13 @@ import { useClientStore } from '@/stores/client';
 import type { Client } from '@/stores/client';
 import { v4 as uuidv4 } from 'uuid';
 
+// Props recebidos para edição e estado de edição
 const props = defineProps<{
-  clientToEdit: Client;
+  clientToEdit: Client | null;
   isEditing: boolean;
 }>();
 
-
+// Eventos emitidos para fechar modal e avisar que salvou
 const emit = defineEmits<{
   (e: 'close'): void;
   (e: 'saved'): void;
@@ -161,6 +169,7 @@ const feedbackMessage = ref('');
 const feedbackClass = ref('');
 const addressLocked = ref(false);
 
+// Formulário reativo usando tipo Client
 const form = reactive<Client>({
   id: '',
   firstName: '',
@@ -178,6 +187,7 @@ const form = reactive<Client>({
   status: 'active',
 });
 
+// Função para carregar dados no formulário para editar ou limpar para novo cliente
 function loadClient(client: Client | null) {
   if (client) {
     Object.assign(form, client);
@@ -203,6 +213,7 @@ function loadClient(client: Client | null) {
   }
 }
 
+// Watch para atualizar formulário quando props.clientToEdit mudar
 watch(
   () => props.clientToEdit,
   (newClient) => {
@@ -211,6 +222,7 @@ watch(
   { immediate: true }
 );
 
+// Busca o endereço via API do ViaCEP ao perder o foco do campo CEP
 async function fetchAddress() {
   if (!form.address.cep || form.address.cep.length !== 8) {
     feedbackMessage.value = 'CEP inválido ou incompleto.';
@@ -228,10 +240,10 @@ async function fetchAddress() {
       feedbackClass.value = 'text-yellow-600';
       addressLocked.value = false;
     } else {
-      form.address.street = data.logradouro;
-      form.address.neighborhood = data.bairro;
-      form.address.city = data.localidade;
-      form.address.uf = data.uf;
+      form.address.street = data.logradouro || '';
+      form.address.neighborhood = data.bairro || '';
+      form.address.city = data.localidade || '';
+      form.address.uf = data.uf || '';
       feedbackMessage.value = 'Endereço carregado com sucesso!';
       feedbackClass.value = 'text-green-600';
       addressLocked.value = true;
@@ -243,10 +255,12 @@ async function fetchAddress() {
   }
 }
 
-function validateCPF(cpf: string) {
+// Validação simples do CPF (apenas tamanho)
+function validateCPF(cpf: string): boolean {
   return cpf.length === 11;
 }
 
+// Função para salvar cliente - validações básicas
 function onSubmit() {
   if (!form.firstName || !form.lastName) {
     feedbackMessage.value = 'Nome e sobrenome são obrigatórios.';
@@ -284,6 +298,7 @@ function onSubmit() {
   feedbackMessage.value = 'Cliente salvo com sucesso!';
   feedbackClass.value = 'text-green-600';
 
+  // Fecha modal e limpa mensagem após 1.5s
   setTimeout(() => {
     feedbackMessage.value = '';
     emit('saved');
