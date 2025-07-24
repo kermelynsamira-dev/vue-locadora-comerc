@@ -7,14 +7,30 @@ Aplicativo desenvolvido como parte do **desafio técnico para vaga de Desenvolve
 ## 📸 Demonstrações Visuais
 
 ![Login](./public/login.png)
+
+
 ![Dashboard](./public/dashboard.png)
+
+
 ![Users](./public/user.png)
+
+
 ![Modal-Users](./public/modal-users.png)
+
+
 ![Clients](./public/client.png)
+
+
 ![Modal-Clients](./public/modal-clients.png)
+
+
 ![Movies](./public/movies.PNG)
+
+
 ![Rentals](./public/rental.png)
-![Modal-Rental](./public/modal-rental.png)
+
+
+![Modal-Rental](./public/modal-rentals.PNG)
 
 
 ---
