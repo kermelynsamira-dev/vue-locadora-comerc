@@ -17,6 +17,6 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/client/ClientForm.spec.ts", "tests/client/ClientList.spec.ts", "tests/rental/RentalList.spec.ts", "tests/rental/RentalForm.spec.ts", "tests/user/UserForm.spec.ts", "tests/user/UserList.spec.ts", "tests/movies/Movies.spec.ts", "tests/login/Login.spec.ts"],
   "exclude": ["node_modules"]
 }
